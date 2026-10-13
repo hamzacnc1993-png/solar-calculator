@@ -1,5 +1,6 @@
 [app]
-
+# قبول تراخيص أندرويد تلقائياً
+android.accept_sdk_license = True
 # (str) عنوان التطبيق الذي سيظهر على شاشة الهاتف
 title = Solar Calculator
 
