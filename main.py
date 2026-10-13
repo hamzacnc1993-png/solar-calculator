@@ -6,7 +6,7 @@ from kivy.uix.textinput import TextInput
 
 
 class SolarCalculatorApp(App):
-
+ 
   def build(self):
     self.title = "حاسبة أداء الطاقة الشمسية"
     layout = BoxLayout(
