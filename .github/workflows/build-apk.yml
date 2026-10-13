@@ -1,4 +1,4 @@
-name: Build Kivy APK Manually
+name: Build Kivy APK via Container
 
 on:
   push:
@@ -8,41 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: kivy/buildozer:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install system dependencies
+      - name: Fix directory permissions for container
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config \
-            zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev wget
-
-      - name: Install Buildozer and Cython
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade cython buildozer
-
-      - name: Prepare Android SDK & Command Line Tools
-        run: |
-          # 1. إنشاء مجلدات التراخيص وقبولها مسبقاً
-          mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
-          echo "24333f8a43b682427c875a698b68ad8a23cfb8d5" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-          echo "84831b9409646a918e30573bab4c9c91346d8abd" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
-          echo "d975f751698a77b662f1254ddbeed3901e976f5a" > /home/runner/.buildozer/android/platform/android-sdk/licenses/intel-android-extra-license
-
-          # 2. تحميل أدوات الأندرويد وفكها مباشرة في مجلد tools ليجدها Buildozer فوراً
-          mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools
-          cd /home/runner/.buildozer/android/platform/android-sdk/tools
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
-          unzip -q cmdline-tools.zip
-          rm cmdline-tools.zip
+          git config --global --add safe.directory /__w/solar-calculator/solar-calculator
 
       - name: Build with Buildozer
         run: |
